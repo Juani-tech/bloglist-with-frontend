@@ -31,13 +31,13 @@ const Blog = ({ blog, updateBlog, removeBlog, username }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       <div>
         {blog.title} {blog.author}{' '}
         {!visible && <button onClick={toggleVisibility}>view</button>}
         {visible && <button onClick={toggleVisibility}>hide</button>}
       </div>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className="togglableContent">
         <div>{blog.url}</div>
         <div>
           likes {likes}{' '}
