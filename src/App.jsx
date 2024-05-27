@@ -92,6 +92,20 @@ const App = () => {
     setBlogs(sortedBlogs);
   };
 
+  const removeBlog = (blog) => {
+    console.log("Removing blog");
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      blogService
+        .remove(blog.id)
+        .then(() => {
+          setBlogs(blogs.filter((b) => b.id !== blog.id));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+
   if (user === null) {
     return (
       <div>
@@ -144,7 +158,13 @@ const App = () => {
         </button>
 
         {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            updateBlog={updateBlog}
+            removeBlog={removeBlog}
+            username={user.username}
+          />
         ))}
       </div>
     );

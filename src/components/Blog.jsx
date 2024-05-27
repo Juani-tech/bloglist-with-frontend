@@ -12,7 +12,7 @@ const addLike = async (blog, setLikes, updateBlog) => {
   }
 };
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, removeBlog, username }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -46,6 +46,15 @@ const Blog = ({ blog, updateBlog }) => {
           </button>
         </div>
         <div>{blog.user.name}</div>
+        {blog.user.username === username && (
+          <button
+            onClick={() => {
+              removeBlog(blog);
+            }}
+          >
+            remove
+          </button>
+        )}
       </div>
     </div>
   );
