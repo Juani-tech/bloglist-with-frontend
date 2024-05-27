@@ -8,7 +8,7 @@ describe('<Blog />', () => {
   let renderedBlog
 
   beforeEach(() => {
-    const user = {
+    const testUser = {
       username: 'test',
       name: 'test',
     }
@@ -16,7 +16,7 @@ describe('<Blog />', () => {
       title: 'testing a form...',
       author: 'test author',
       url: 'http://test.com',
-      user,
+      user: testUser,
     }
     mockHandler = vi.fn()
 
@@ -38,4 +38,22 @@ describe('<Blog />', () => {
       renderedBlog.container.querySelector('.togglableContent')
     expect(togglableContent).toHaveStyle('display: none')
   })
+
+  // Realiza una prueba que verifique que la URL del blog y el número de likes se muestran cuando se hace clic en el botón que controla los detalles mostrados.
+  test('after clicking the button, url and likes are displayed', async () => {
+    const user = userEvent.setup()
+
+    const button = screen.getByText('view')
+    await user.click(button)
+
+    const togglableContent =
+      renderedBlog.container.querySelector('.togglableContent')
+    expect(togglableContent).not.toHaveStyle('display: none')
+  })
+
+  // 5.15: Pruebas de Listas de Blogs, paso 3
+  // Realiza una prueba que garantice que si se hace clic dos veces en el botón like, se llama dos veces al controlador de eventos que el componente recibió como props.
+
+  // 5.16: Pruebas de Listas de Blogs, paso 4
+  // Haz una prueba para el nuevo formulario de blog. La prueba debe verificar que el formulario llama al controlador de eventos que recibió como props con los detalles correctos cuando se crea un nuevo blog.
 })
