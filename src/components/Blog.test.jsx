@@ -15,6 +15,7 @@ describe('<Blog />', () => {
     blog = {
       title: 'testing a form...',
       author: 'test author',
+      likes: 0,
       url: 'http://test.com',
       user: testUser,
     }
@@ -24,7 +25,7 @@ describe('<Blog />', () => {
       <Blog
         blog={blog}
         updateBlog={mockHandler}
-        removeBlog={mockHandler}
+        // removeBlog={mockHandler}
         username={'Test user'}
       />
     )
@@ -53,7 +54,16 @@ describe('<Blog />', () => {
 
   // 5.15: Pruebas de Listas de Blogs, paso 3
   // Realiza una prueba que garantice que si se hace clic dos veces en el botón like, se llama dos veces al controlador de eventos que el componente recibió como props.
+  test('clicking the like button twice calls event handler twice', async () => {
+    const user = userEvent.setup()
 
-  // 5.16: Pruebas de Listas de Blogs, paso 4
-  // Haz una prueba para el nuevo formulario de blog. La prueba debe verificar que el formulario llama al controlador de eventos que recibió como props con los detalles correctos cuando se crea un nuevo blog.
+    const viewButton = screen.getByText('view')
+    await user.click(viewButton)
+
+    const likeButton = screen.getByText('like')
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(mockHandler.mock.calls).toHaveLength(2)
+  })
 })

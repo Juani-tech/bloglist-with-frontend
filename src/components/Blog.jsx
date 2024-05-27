@@ -1,15 +1,9 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
 const addLike = async (blog, setLikes, updateBlog) => {
   const updatedBlog = { ...blog, likes: blog.likes + 1 }
-  try {
-    await blogService.update(blog.id, updatedBlog)
-    updateBlog(updatedBlog)
-    setLikes(updatedBlog.likes)
-  } catch (error) {
-    console.log(error)
-  }
+  updateBlog(blog.id, updatedBlog)
+  setLikes(updatedBlog.likes)
 }
 
 const Blog = ({ blog, updateBlog, removeBlog, username }) => {

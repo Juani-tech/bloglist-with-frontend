@@ -79,11 +79,14 @@ const App = () => {
     }
   }
 
-  const updateBlog = (updatedBlog) => {
+  const updateBlog = async (blogId, updatedBlog) => {
     console.log('Updating blogs')
-    setBlogs(
-      blogs.map((blog) => (blog.id !== updatedBlog.id ? blog : updatedBlog))
-    )
+    try {
+      await blogService.update(blogId, updatedBlog)
+      setBlogs(blogs.map((blog) => (blog.id !== blogId ? blog : updatedBlog)))
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const sortByLikes = () => {
