@@ -10,9 +10,6 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
   const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -66,7 +63,6 @@ const App = () => {
 
     try {
       blogService.create(blog).then((returnedBlog) => {
-        console.log("RETURNED BLOG: ", returnedBlog);
         setBlogs(blogs.concat(returnedBlog));
       });
 
@@ -81,6 +77,13 @@ const App = () => {
         setErrorMessage(null);
       }, 5000);
     }
+  };
+
+  const updateBlog = (updatedBlog) => {
+    console.log("Updating blogs");
+    setBlogs(
+      blogs.map((blog) => (blog.id !== updatedBlog.id ? blog : updatedBlog))
+    );
   };
 
   if (user === null) {
@@ -128,7 +131,7 @@ const App = () => {
         </Togglable>
 
         {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
         ))}
       </div>
     );
