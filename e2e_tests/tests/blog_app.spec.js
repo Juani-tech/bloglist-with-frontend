@@ -34,4 +34,24 @@ describe('Blog app', () => {
       await expect(page.getByText('Wrong credentials')).toBeVisible()
     })
   })
+  describe('When logged in', () => {
+    beforeEach(async ({ page, request }) => {
+      await page.getByTestId('username').fill('juani')
+      await page.getByTestId('password').fill('pdc')
+      await page.getByRole('button', { name: 'login' }).click()
+    })
+    test('a new blog can be created', async ({ page }) => {
+      await page.getByRole('button', { name: 'new blog' }).click()
+      // title, author, url -> create
+      await page.getByTestId('title').fill('Testing')
+      await page.getByTestId('author').fill('Juani')
+      await page.getByTestId('url').fill('no-url.com')
+      await page.getByRole('button', { name: 'create' }).click()
+
+      await expect(
+        page.getByText('A new blog Testing by Juani added')
+      ).toBeVisible()
+      await expect(page.getByText('Testing Juani')).toBeVisible()
+    })
+  })
 })
