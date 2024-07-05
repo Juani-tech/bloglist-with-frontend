@@ -1,4 +1,6 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
+const { loginWith, createBlog } = require('./helper')
+const { log } = require('console')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -21,37 +23,36 @@ describe('Blog app', () => {
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      await page.getByTestId('username').fill('juani')
-      await page.getByTestId('password').fill('pdc')
-      await page.getByRole('button', { name: 'login' }).click()
+      await loginWith(page, 'juani', 'pdc')
       await expect(page.getByText('Juani logged in')).toBeVisible()
     })
 
     test('fails with wrong credentials', async ({ page }) => {
-      await page.getByTestId('username').fill('juani')
-      await page.getByTestId('password').fill('wrongpassword')
-      await page.getByRole('button', { name: 'login' }).click()
+      await loginWith(page, 'juani', 'wrongpassword')
       await expect(page.getByText('Wrong credentials')).toBeVisible()
     })
   })
   describe('When logged in', () => {
     beforeEach(async ({ page, request }) => {
-      await page.getByTestId('username').fill('juani')
-      await page.getByTestId('password').fill('pdc')
-      await page.getByRole('button', { name: 'login' }).click()
+      await loginWith(page, 'juani', 'pdc')
     })
     test('a new blog can be created', async ({ page }) => {
-      await page.getByRole('button', { name: 'new blog' }).click()
-      // title, author, url -> create
-      await page.getByTestId('title').fill('Testing')
-      await page.getByTestId('author').fill('Juani')
-      await page.getByTestId('url').fill('no-url.com')
-      await page.getByRole('button', { name: 'create' }).click()
-
+      await createBlog(page, 'Testing', 'Juani', 'no-url.com')
       await expect(
         page.getByText('A new blog Testing by Juani added')
       ).toBeVisible()
       await expect(page.getByText('Testing Juani')).toBeVisible()
+    })
+
+    describe('and a blog exists', () => {
+      beforeEach(async ({ page, request }) => {
+        await createBlog(page, 'Testing', 'Juani', 'no-url.com')
+      })
+      test('it can be edited', async ({ page }) => {
+        await page.getByRole('button', { name: 'view' }).click()
+        await page.getByTestId('like-button').click()
+        await expect(page.getByText('likes 1')).toBeVisible()
+      })
     })
   })
 })

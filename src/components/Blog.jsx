@@ -35,7 +35,10 @@ const Blog = ({ blog, updateBlog, removeBlog, username }) => {
         <div>{blog.url}</div>
         <div>
           likes {likes}{' '}
-          <button onClick={() => addLike(blog, setLikes, updateBlog)}>
+          <button
+            data-testid="like-button"
+            onClick={() => addLike(blog, setLikes, updateBlog)}
+          >
             like
           </button>
         </div>
