@@ -12,6 +12,13 @@ describe('Blog app', () => {
         password: 'pdc',
       },
     })
+    await request.post('http://localhost:3001/api/users', {
+      data: {
+        name: 'Other',
+        username: 'other',
+        password: 'other',
+      },
+    })
     await page.goto('http://localhost:5173')
   })
 
@@ -60,6 +67,15 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'remove' }).click()
         page.on('dialog', async (dialog) => await dialog.accept())
         await expect(page.getByTestId('title')).not.toBeVisible()
+      })
+
+      test('only its creator can see the remove button', async ({ page }) => {
+        await page.getByRole('button', { name: 'logout' }).click()
+        await loginWith(page, 'other', 'other')
+        await page.getByRole('button', { name: 'view' }).click()
+        await expect(
+          page.getByRole('button', { name: 'remove' })
+        ).not.toBeVisible()
       })
     })
   })
