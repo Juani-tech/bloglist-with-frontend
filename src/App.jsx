@@ -161,7 +161,6 @@ const App = () => {
         >
           Sort by likes
         </button>
-
         {blogs.map((blog) => (
           <Blog
             key={blog.id}

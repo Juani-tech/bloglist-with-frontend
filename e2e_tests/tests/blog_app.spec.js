@@ -48,10 +48,18 @@ describe('Blog app', () => {
       beforeEach(async ({ page, request }) => {
         await createBlog(page, 'Testing', 'Juani', 'no-url.com')
       })
+
       test('it can be edited', async ({ page }) => {
         await page.getByRole('button', { name: 'view' }).click()
         await page.getByTestId('like-button').click()
         await expect(page.getByText('likes 1')).toBeVisible()
+      })
+
+      test('it can be removed', async ({ page }) => {
+        await page.getByRole('button', { name: 'view' }).click()
+        await page.getByRole('button', { name: 'remove' }).click()
+        page.on('dialog', async (dialog) => await dialog.accept())
+        await expect(page.getByTestId('title')).not.toBeVisible()
       })
     })
   })
