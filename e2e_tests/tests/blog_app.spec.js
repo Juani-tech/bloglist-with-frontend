@@ -1,6 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith, createBlog } = require('./helper')
-const { log } = require('console')
+const { loginWith, createBlog, likeTheBlogWithTitleTimes } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -76,6 +75,26 @@ describe('Blog app', () => {
         await expect(
           page.getByRole('button', { name: 'remove' })
         ).not.toBeVisible()
+      })
+    })
+    describe('and multiple blogs exists', () => {
+      beforeEach(async ({ page, request }) => {
+        await createBlog(page, 'blog1', 'Juani', 'nourl')
+        await createBlog(page, 'blog2', 'Juani', 'nourl')
+        await createBlog(page, 'blog3', 'Juani', 'nourl')
+      })
+
+      test('can be shown sorted by likes', async ({ page }) => {
+        await likeTheBlogWithTitleTimes(page, 'blog3', 3)
+        await likeTheBlogWithTitleTimes(page, 'blog2', 2)
+        await likeTheBlogWithTitleTimes(page, 'blog1', 1)
+        await page
+          .getByRole('button', { name: 'Sort by likes', exact: true })
+          .click()
+        const allBlogs = await page.getByText(/blog\d+ Juani/).all()
+        await expect(allBlogs[0]).toHaveText('blog3 Juani hide')
+        await expect(allBlogs[1]).toHaveText('blog2 Juani hide')
+        await expect(allBlogs[2]).toHaveText('blog1 Juani hide')
       })
     })
   })

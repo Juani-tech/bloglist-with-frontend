@@ -13,4 +13,15 @@ const createBlog = async (page, title, author, url) => {
   await page.getByRole('button', { name: 'create' }).click()
   await page.getByText(title).waitFor()
 }
-export { loginWith, createBlog }
+
+const likeTheBlogWithTitleTimes = async (page, title, times) => {
+  await page.getByText(title).getByTestId('view-button').click()
+  let blog = await page.getByText(title).locator('..')
+
+  for (let i = 0; i < times; i++) {
+    await blog.getByRole('button', { name: 'like', exact: true }).click()
+    await blog.getByText(`likes ${i + 1}`).waitFor()
+  }
+}
+
+export { loginWith, createBlog, likeTheBlogWithTitleTimes }
